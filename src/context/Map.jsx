@@ -1,17 +1,11 @@
 import { Map } from "ol";
-export default function TheMap(
-  layerList,
-  userView,
-  controlsParameters,
-  overlayArray
-) {
-  const map = new Map({
-    controls: controlsParameters,
-    target: document.getElementById("map"),
-    layers: layerList,
-    overlays: overlayArray,
-    view: userView,
-  });
 
-  return map;
+export default function TheMap(layers, controls, overlays, view) {
+  return new Map({
+    target: document.getElementById("map"),
+    controls: controls,
+    layers: layers,
+    overlays: overlays,
+    view: view,
+  });
 }

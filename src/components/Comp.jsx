@@ -14,53 +14,57 @@ import { createStringXY } from "ol/coordinate";
 import { defaults as defaultControls } from "ol/control.js";
 
 export default function Comp() {
-  const { userView } = useContext(MapContext);
-  const [map, setMap] = useState(null);
+  useGeographic();
+  const { view, map, setMap } = useContext(MapContext);
   const [num, setNum] = useState(0);
-  const overlayArray = [];
+  const overlays = [];
   const osm = new TileLayer({
     source: new OSM(),
   });
-  const layerArray = [osm];
-
+  const layers = [osm];
   const mousePositionControl = new MousePosition({
     coordinateFormat: createStringXY(4),
     projection: "EPSG:4326",
     className: "custom-mouse-position",
+    target: document.getElementById("mouse-position"),
   });
-
-  function addPoint(lon, lat) {
-    layerArray.push(
-      new VectorLayer({
-        map: TheMap,
-        source: new VectorSource({
-          features: [new Feature(new Point([lon, lat]))],
-        }),
-      })
-    );
-    setNum(num + 1);
-  }
-
   useEffect(() => {
     const container = document.getElementById("popup");
     const overlay1 = new Overlay({
       id: "overlay1",
       element: container,
     });
-    overlayArray.push(overlay1);
+    overlays.push(overlay1);
+
     setMap(
       TheMap(
-        layerArray,
-        userView,
+        layers,
         defaultControls().extend([mousePositionControl]),
-        overlayArray
+        overlays,
+        view
       )
     );
   }, []);
-  if (map == null) console.log("map is null");
+  if (map !== null) {
+    const overlaysMap = map.getOverlays().getArray();
+    overlaysMap.forEach((item) => {
+      if (item.id == "overlay1") {
+        map.on("singleclick", () => {
+          const coord = document.querySelector(
+            ".custom-mouse-position"
+          ).textContent;
+          const coordArr = coord.split(", ");
+          item.setPosition(coordArr);
+          console.log("map.on activated");
+        });
+      }
+    });
+  }
   return (
     <div id="map">
-      <div className="popup"></div>
+      <div className="popup">
+        <h1>POPUP</h1>
+      </div>
     </div>
   );
 }
