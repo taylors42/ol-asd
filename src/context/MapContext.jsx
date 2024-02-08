@@ -3,7 +3,7 @@ import { View } from "ol";
 export const MapContext = createContext();
 
 export function MapContextProvider({ children, value }) {
-  const [map, setMap] = useState(null);
+  const [map, createMap] = useState(null);
   const [view, setUserView] = useState(
     new View({
       center: [0, 0],
@@ -12,7 +12,7 @@ export function MapContextProvider({ children, value }) {
   );
 
   return (
-    <MapContext.Provider value={{ map, setMap, view }}>
+    <MapContext.Provider value={{ map, createMap, view }}>
       {children}
     </MapContext.Provider>
   );

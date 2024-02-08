@@ -2,7 +2,7 @@
   top: 0;
   bottom: 0;
   width: 100%;
-  height: 40rem;
+  height: 40.8rem;
 }
 
 .App {
@@ -10,6 +10,23 @@
 }
 .ol-mouse-position {
   opacity: 0%;
+}
+.ol-overlay-container {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6.8px);
+  -webkit-backdrop-filter: blur(6.8px);
+  border: 1px solid rgba(0, 0, 0, 0.11);
+  width: 10rem;
+  height: 5rem;
+}
+.ol-overlay-container p {
+  color: white;
+  z-index: -1;
+}
+ul {
+  display: none;
 }
 #popup {
   position: absolute;
