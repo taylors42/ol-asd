@@ -2,7 +2,7 @@ import { useContext, useMemo, useEffect, useState } from "react";
 import { MapContext } from "../context/MapContext";
 import TheMap from "../context/Map";
 import "../App.css";
-import { Feature } from "ol";
+import { Feature, Map } from "ol";
 import { Vector as VectorSource } from "ol/source";
 import { OSM } from "ol/source";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
@@ -39,6 +39,7 @@ export default function Comp() {
     if (TEMP) {
       TEMP.remove();
     }
+
     overlays.push(overlay1);
 
     createMap(
@@ -51,26 +52,13 @@ export default function Comp() {
     );
   }, [num]);
   const addPoint = () => {
-    if (map) {
-      const coordinates = [0, 0];
-      const point = new Point(coordinates);
-      const pointFeature = new Feature(point);
-      const vectorSource = new VectorSource({
-        features: [pointFeature],
-      });
-      const vectorLayer = new TileLayer({
-        source: vectorSource,
-      });
-      map.addLayer(vectorLayer);
-    }
+    console.log("ponto");
   };
   const cleanDuplicateDiv = (div) => {
     const innerDiv = document.querySelectorAll(div);
-    if (innerDiv) {
+    if (innerDiv || innerDiv.length > 1) {
       if (innerDiv.length > 1) {
-        console.log(2);
         innerDiv[0].remove();
-        console.log("First div removed with sucess!");
       } else {
         console.error("without any divs here");
       }
@@ -78,18 +66,13 @@ export default function Comp() {
   };
   const cleanTextContent = (div) => {
     const innerDiv = document.querySelector(div);
-    if (innerDiv) {
-      if (innerDiv.hasChildNodes()) {
-        while (innerDiv.firstChild) {
-          innerDiv.removeChild(innerDiv.firstChild);
-        }
-        console.log("end while");
-        cleanDuplicateDiv(div);
-      } else {
-        console.log("error second node on if (popupContent.hasChildNodes()");
+    if (innerDiv || innerDiv.hasChildNodes) {
+      while (innerDiv.firstChild) {
+        innerDiv.removeChild(innerDiv.firstChild);
       }
+      cleanDuplicateDiv(div);
     } else {
-      console.log("error on if (popupContent)");
+      console.error("line 77");
     }
   };
 
@@ -101,13 +84,13 @@ export default function Comp() {
           const coord = document.querySelector(
             ".custom-mouse-position"
           ).textContent;
+          const coordArr = coord.split(", ");
           const popupDiv = document.querySelector(".ol-selectable");
           popupDiv.style.removeProperty("position");
           let pTag = document.createElement("p");
-          pTag.textContent = "Overlay";
+          pTag.textContent = `${coord}`;
           cleanTextContent(".ol-selectable");
           popupDiv.appendChild(pTag);
-          const coordArr = coord.split(", ");
           item.setPosition(coordArr);
         });
       }
@@ -119,7 +102,22 @@ export default function Comp() {
         className="botao"
         style={{ position: "absolute", zIndex: "10" }}
         onClick={() => {
-          setNum(num + 1);
+          const layer1 = new VectorLayer({
+            source: new VectorSource({
+              features: [
+                new Feature(
+                  new Point([
+                    Math.floor(Math.random() * 100),
+                    Math.floor(Math.random() * 100),
+                  ])
+                ),
+              ],
+            }),
+          });
+          if (map) {
+            map.addLayer(layer1);
+            console.log(map.getAllLayers()[1]);
+          }
         }}
       >
         Click
