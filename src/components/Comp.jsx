@@ -80,7 +80,7 @@ export default function Comp() {
     const overlaysMap = map.getOverlays().getArray();
     overlaysMap.forEach((item) => {
       if (item.id == "overlay1") {
-        map.on("singleclick", () => {
+        map.on("singleclick", (event) => {
           const coord = document.querySelector(
             ".custom-mouse-position"
           ).textContent;
@@ -88,10 +88,15 @@ export default function Comp() {
           const popupDiv = document.querySelector(".ol-selectable");
           popupDiv.style.removeProperty("position");
           let pTag = document.createElement("p");
-          pTag.textContent = `${coord}`;
           cleanTextContent(".ol-selectable");
-          popupDiv.appendChild(pTag);
-          item.setPosition(coordArr);
+
+          console.log(event);
+          if (map.getFeaturesAtPixel(event.pixel)[0] != undefined) {
+            pTag.textContent = "ponto";
+            popupDiv.appendChild(pTag);
+            console.log(map.getFeaturesAtPixel(event.pixel)[0]);
+            item.setPosition(coordArr);
+          }
         });
       }
     });
@@ -116,7 +121,6 @@ export default function Comp() {
           });
           if (map) {
             map.addLayer(layer1);
-            console.log(map.getAllLayers()[1]);
           }
         }}
       >
