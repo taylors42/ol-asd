@@ -2,16 +2,13 @@ import { useContext, useMemo, useEffect, useState } from "react";
 import { MapContext } from "../context/MapContext";
 import TheMap from "../context/Map";
 import "../App.css";
-import { Feature, Map } from "ol";
+import { Feature } from "ol";
 import { Vector as VectorSource } from "ol/source";
 import { OSM } from "ol/source";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import Point from "ol/geom/Point.js";
 import { useGeographic } from "ol/proj.js";
 import { Overlay } from "ol";
-import MousePosition from "ol/control/MousePosition";
-import { createStringXY } from "ol/coordinate";
-import { defaults as defaultControls } from "ol/control.js";
 
 export default function Comp() {
   useGeographic();
@@ -22,12 +19,6 @@ export default function Comp() {
     source: new OSM(),
   });
   const layers = [osm];
-  const mousePositionControl = new MousePosition({
-    coordinateFormat: createStringXY(4),
-    projection: "EPSG:4326",
-    className: "custom-mouse-position",
-    target: document.getElementById("mouse-position"),
-  });
 
   useEffect(() => {
     const container = document.getElementById("popup");
@@ -42,26 +33,33 @@ export default function Comp() {
 
     overlays.push(overlay1);
 
-    createMap(
-      TheMap(
-        layers,
-        defaultControls().extend([mousePositionControl]),
-        overlays,
-        view
-      )
-    );
+    createMap(TheMap(layers, overlays, view));
   }, [num]);
-  const addPoint = () => {
-    console.log("ponto");
-  };
+  function addPoint() {
+    const layer1 = new VectorLayer({
+      source: new VectorSource({
+        features: [
+          new Feature(
+            new Point([
+              Math.floor(Math.random() * 100),
+              Math.floor(Math.random() * 100),
+            ])
+          ),
+        ],
+      }),
+    });
+    if (map) {
+      map.addLayer(layer1);
+    }
+  }
   const cleanDuplicateDiv = (div) => {
     const innerDiv = document.querySelectorAll(div);
-    if (innerDiv || innerDiv.length > 1) {
+    if (innerDiv) {
       if (innerDiv.length > 1) {
         innerDiv[0].remove();
-      } else {
-        console.error("without any divs here");
       }
+    } else {
+      console.error("innerDiv false");
     }
   };
   const cleanTextContent = (div) => {
@@ -81,21 +79,15 @@ export default function Comp() {
     overlaysMap.forEach((item) => {
       if (item.id == "overlay1") {
         map.on("singleclick", (event) => {
-          const coord = document.querySelector(
-            ".custom-mouse-position"
-          ).textContent;
-          const coordArr = coord.split(", ");
           const popupDiv = document.querySelector(".ol-selectable");
           popupDiv.style.removeProperty("position");
           let pTag = document.createElement("p");
           cleanTextContent(".ol-selectable");
-
-          console.log(event);
           if (map.getFeaturesAtPixel(event.pixel)[0] != undefined) {
             pTag.textContent = "ponto";
             popupDiv.appendChild(pTag);
-            console.log(map.getFeaturesAtPixel(event.pixel)[0]);
-            item.setPosition(coordArr);
+            item.setPosition(event.coordinate);
+          } else {
           }
         });
       }
@@ -107,21 +99,7 @@ export default function Comp() {
         className="botao"
         style={{ position: "absolute", zIndex: "10" }}
         onClick={() => {
-          const layer1 = new VectorLayer({
-            source: new VectorSource({
-              features: [
-                new Feature(
-                  new Point([
-                    Math.floor(Math.random() * 100),
-                    Math.floor(Math.random() * 100),
-                  ])
-                ),
-              ],
-            }),
-          });
-          if (map) {
-            map.addLayer(layer1);
-          }
+          addPoint();
         }}
       >
         Click
