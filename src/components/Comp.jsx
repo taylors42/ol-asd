@@ -9,16 +9,21 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import Point from "ol/geom/Point.js";
 import { useGeographic } from "ol/proj.js";
 import { Overlay } from "ol";
+import { getVectorContext } from "ol/render.js";
+import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style.js";
+import { Polygon } from "ol/geom";
 
 export default function Comp() {
   useGeographic();
-  const { view, map, createMap } = useContext(MapContext);
+  const { view, map, createMap, setView } = useContext(MapContext);
+  const popupDiv = document.querySelector(".ol-selectable");
   const [num, setNum] = useState(0);
   const overlays = [];
-  const osm = new TileLayer({
-    source: new OSM(),
-  });
-  const layers = [osm];
+  const layers = [
+    new TileLayer({
+      source: new OSM(),
+    }),
+  ];
 
   useEffect(() => {
     const container = document.getElementById("popup");
@@ -30,9 +35,7 @@ export default function Comp() {
     if (TEMP) {
       TEMP.remove();
     }
-
     overlays.push(overlay1);
-
     createMap(TheMap(layers, overlays, view));
   }, [num]);
   function addPoint() {
@@ -79,7 +82,7 @@ export default function Comp() {
     overlaysMap.forEach((item) => {
       if (item.id == "overlay1") {
         map.on("singleclick", (event) => {
-          const popupDiv = document.querySelector(".ol-selectable");
+          document.querySelector(".ol-selectable").style.display = "flex";
           popupDiv.style.removeProperty("position");
           let pTag = document.createElement("p");
           cleanTextContent(".ol-selectable");
@@ -88,11 +91,26 @@ export default function Comp() {
             popupDiv.appendChild(pTag);
             item.setPosition(event.coordinate);
           } else {
+            document.querySelector(".ol-selectable").style.display = "none";
           }
         });
       }
     });
   }
+  (async () => {
+    try {
+      const response = await fetch("http://localhost:8080/routes");
+      const result = await response.json();
+      const polyline = result[0].geometry;
+      const routes = new Polyline({
+        factor: 1e6,
+      }).readGeometry(polyline, {
+        dataProjection: "EPSG: ",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  })();
   return (
     <div id="map">
       <button

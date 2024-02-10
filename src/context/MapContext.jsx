@@ -4,15 +4,15 @@ export const MapContext = createContext();
 
 export function MapContextProvider({ children, value }) {
   const [map, createMap] = useState(null);
-  const [view, setUserView] = useState(
+  const [view, setView] = useState(
     new View({
-      center: [0, 0],
+      center: [-5639523.95, -3501274.52],
       zoom: 2,
     })
   );
 
   return (
-    <MapContext.Provider value={{ map, createMap, view }}>
+    <MapContext.Provider value={{ map, createMap, view, setView }}>
       {children}
     </MapContext.Provider>
   );
