@@ -39,21 +39,20 @@ export default function Comp() {
     createMap(TheMap(layers, overlays, view));
   }, [num]);
   function addPoint() {
-    const layer1 = new VectorLayer({
-      source: new VectorSource({
-        features: [
-          new Feature(
-            new Point([
-              Math.floor(Math.random() * 100),
-              Math.floor(Math.random() * 100),
-            ])
-          ),
-        ],
-      }),
-    });
-    if (map) {
-      map.addLayer(layer1);
-    }
+    map.addLayer(
+      new VectorLayer({
+        source: new VectorSource({
+          features: [
+            new Feature(
+              new Point([
+                Math.floor(Math.random() * 100),
+                Math.floor(Math.random() * 100),
+              ])
+            ),
+          ],
+        }),
+      })
+    );
   }
   const cleanDuplicateDiv = (div) => {
     const innerDiv = document.querySelectorAll(div);
@@ -97,20 +96,20 @@ export default function Comp() {
       }
     });
   }
-  (async () => {
-    try {
-      const response = await fetch("http://localhost:8080/routes");
-      const result = await response.json();
-      const polyline = result[0].geometry;
-      const routes = new Polyline({
-        factor: 1e6,
-      }).readGeometry(polyline, {
-        dataProjection: "EPSG: ",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  })();
+  // (async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:8080/routes");
+  //     const result = await response.json();
+  //     const polyline = result[0].geometry;
+  //     const routes = new Polyline({
+  //       factor: 1e6,
+  //     }).readGeometry(polyline, {
+  //       dataProjection: "EPSG: ",
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // })();
   return (
     <div id="map">
       <button
