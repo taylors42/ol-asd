@@ -8,6 +8,7 @@ function App() {
     <MapContextProvider>
       <div className="App">
         <Comp />
+        <div id="overlay3"></div>
       </div>
     </MapContextProvider>
   );

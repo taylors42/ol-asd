@@ -11,6 +11,13 @@
 .ol-mouse-position {
   opacity: 0%;
 }
+.overlay3 {
+  width: 30px;
+  height: 30px;
+  background: black;
+  display: flex;
+  justify-content: center;
+}
 .ol-overlay-container {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 16px;

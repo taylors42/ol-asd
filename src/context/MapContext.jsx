@@ -6,8 +6,8 @@ export function MapContextProvider({ children, value }) {
   const [map, createMap] = useState(null);
   const [view, setView] = useState(
     new View({
-      center: [-5639523.95, -3501274.52],
-      zoom: 2,
+      center: [-110, 45],
+      zoom: 6,
     })
   );
 
