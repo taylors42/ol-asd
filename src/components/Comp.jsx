@@ -58,18 +58,19 @@ export default function Comp() {
         width: 3,
       }),
     });
-    map.addLayer(
-      new VectorLayer({
-        source: new VectorSource({
-          features: [
-            new Feature({
-              geometry: new LineString(arr),
-            }),
-          ],
-        }),
-        style: style,
+    const lineFeature = new Feature({
+      geometry: new LineString(arr),
+    })
+    const lineVectorLayer = new VectorLayer({
+      source: new VectorSource({
+        features: [lineFeature],
       })
-    );
+    })
+    lineFeature.setId("lineStringID");
+    lineFeature.setStyle(style)
+    map.addLayer(lineVectorLayer);
+    addIcon() 
+
   }
 
   function cleanPoints() {
@@ -90,15 +91,13 @@ export default function Comp() {
       innerDiv[0].remove();
     }
   };
-  const cleanTextContent = (div) => {
+  const cleanDuplicateTextContent = (div) => {
     const innerDiv = document.querySelector(div);
     if (innerDiv && innerDiv.hasChildNodes) {
       while (innerDiv.firstChild) {
         innerDiv.removeChild(innerDiv.firstChild);
       }
       cleanDuplicateDiv(div);
-    } else {
-      console.error("line 77");
     }
   };
 
@@ -151,6 +150,19 @@ export default function Comp() {
     }
   }
   function walk() {}
+
+  function randomRouteGenerator(arr, num) {
+    let lat = Math.random() * 180 - 90;
+    let long = Math.random() * 360 - 180;
+    arr.push([lat, long]);
+  
+    for (let i = 1; i < num; i++) {
+      lat += (Math.random() - 0.5) * 20; // Variação aleatória na latitude
+      long += (Math.random() - 0.5) * 20; // Variação aleatória na longitude
+      arr.push([lat, long]);
+    }
+  }
+  
   function addIcon() {
     if (map) {
       const iconStyle = new Style({
@@ -178,39 +190,46 @@ export default function Comp() {
     }
   }
   if (map !== null) {
+    cleanPoints()
+    randomRouteGenerator(line, 2)
+    cleanDuplicates(line)
+    addLine(line)
+    addIcon() 
     const overlaysMap = map.getOverlays().getArray();
-    overlaysMap.forEach((item) => {
-      if (item.id == "overlay1") {
-        map.on("singleclick", (event) => {
-          document.querySelector(".ol-selectable").style.display = "flex";
-          popupDiv.style.removeProperty("position");
-          let pTag = document.createElement("p");
-          line.push(event.coordinate);
-          cleanDuplicates(line);
-          cleanTextContent(".ol-selectable");
-          cleanPoints();
-          addLine(line);
-          addIcon();
-          if (map.getFeaturesAtPixel(event.pixel)[0] != undefined) {
-            pTag.textContent = "ponto";
-            popupDiv.appendChild(pTag);
-            item.setPosition(event.coordinate);
-          } else {
-            document.querySelector(".ol-selectable").style.display = "none";
-          }
-        });
+    map.on("singleclick", (event) => {
+      document.querySelector(".ol-selectable").style.display = "flex"
+      popupDiv.style.removeProperty("position")
+      let pTag = document.createElement("p")
+      const featuresObj = map.getFeaturesAtPixel(event.pixel)[0]
+      if (featuresObj !== undefined){
+        if (featuresObj.id_ === "lineStringID"){
+          overlaysMap.forEach((item) => {
+            if (item.id === "overlay1"){
+              cleanDuplicateDiv("ol-selectable")
+              cleanDuplicateTextContent(".ol-selectable")
+              popupDiv.appendChild(pTag)
+              pTag.textContent = "linha"
+              item.setPosition(event.coordinate)
+            }
+          })
+        }
+        else if (featuresObj.id_ === "icone"){
+          overlaysMap.forEach((item) => {
+            if (item.id === "overlay1"){
+              cleanDuplicateDiv("ol-selectable")
+              cleanDuplicateTextContent(".ol-selectable")
+              popupDiv.appendChild(pTag)
+              pTag.textContent = "icone"
+              item.setPosition(event.coordinate)
+            }
+          })
+        }
       }
-      map.on("click", function (evt) {
-        const feature = map.forEachFeatureAtPixel(
-          evt.pixel,
-          function (feature) {
-            return feature;
-          }
-        );
-
-        console.log(feature);
-      });
-    });
+      else {
+        document.querySelector(".ol-selectable").style.display = "none"
+      }
+    })
+    
   }
 
   return (
