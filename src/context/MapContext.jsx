@@ -8,6 +8,7 @@ export function MapContextProvider({ children, value }) {
     new View({
       center: [-110, 45],
       zoom: 6,
+      maxZoom: 14,
     })
   );
 
