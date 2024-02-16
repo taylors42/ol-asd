@@ -51,32 +51,25 @@ export default function Comp() {
     routeGenerator(map, line, 4, "y");
     addIcon(map, line);
     map.on("singleclick", (event) => {
-      console.log(event);
       cleanDuplicateTextContent(".ol-selectable");
       overlayDiv.style.removeProperty("position");
       const featuresObj = map.getFeaturesAtPixel(event.pixel)[0];
+      const overlay1 = map
+        .getOverlays()
+        .getArray()
+        .find((obj) => obj.id === "overlay1");
       if (featuresObj !== undefined) {
-        document.querySelector(".ol-selectable").style.display = "flex";
         const featureLocate = featuresObj.geometryChangeKey_;
-        if (featuresObj.id_ === "line" || featuresObj.id_ === "icone") {
-          map
-            .getOverlays()
-            .getArray()
-            .forEach((item) => {
-              if (item.id === "overlay1") {
-                if (
-                  document.querySelector(".ol-selectable").textContent === ""
-                ) {
-                  document.querySelector(".ol-selectable").textContent =
-                    featuresObj.id_;
-                  console.log(featuresObj);
-                }
-                item.setPosition(featureLocate.target.flatCoordinates);
-              }
-            });
+        if (featuresObj.id_ === "icone") {
+          if (document.querySelector(".ol-selectable").textContent === "") {
+            document.querySelector(".ol-selectable").textContent =
+              featuresObj.id_;
+            console.log(featuresObj);
+          }
+          overlay1.setPosition(featureLocate.target.flatCoordinates);
         }
       } else {
-        document.querySelector(".ol-selectable").style.display = "none";
+        overlay1.setPosition(undefined);
       }
     });
   }
