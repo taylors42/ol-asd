@@ -10,6 +10,7 @@ export default function SelectButtons(){
       <button onClick={() => { getLocate()} }>My Location</button>
       <button onClick={() => { setUserViewX((userViewX - userViewX) + 1); setUserViewY((userViewY - userViewY) + 1); console.log("exec")}}>Reset View</button>
       <button onClick={() => { setNum( num + 1 ) }}></button>
+      
     </div>
   )
 }
