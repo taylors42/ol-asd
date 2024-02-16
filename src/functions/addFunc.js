@@ -4,6 +4,7 @@ import { Vector as VectorSource } from "ol/source";
 import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style.js";
 import Point from "ol/geom/Point.js";
 import { Feature } from "ol";
+import { Overlay } from "ol";
 
 export function addIcon(map, arr) {
   if (map) {
@@ -63,4 +64,13 @@ export function addPoint(map, coordinates) {
       }),
     })
   );
+}
+
+export function createOverlay(map, id, element) {
+  const overlay = new Overlay({
+    id: id,
+    className: element,
+    position: [0,0]
+  })
+  map.addOverlay(overlay)
 }
