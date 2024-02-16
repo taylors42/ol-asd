@@ -4,8 +4,8 @@ export function routeGenerator(routeArray, numberOfGenerations) {
   routeArray.push([lat, long]);
 
   for (let i = 1; i < numberOfGenerations; i++) {
-    lat += (Math.random() - 0.5) * 20;
-    long += (Math.random() - 0.5) * 20;
+    lat += (Math.random() - 0.3) * 20;
+    long += (Math.random() - 0.3) * 20;
     routeArray.push([lat, long]);
   }
 }

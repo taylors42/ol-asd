@@ -1,29 +1,24 @@
-array = [1, 2, 3, 3, 3];
-// console.log(array);
-// for (let index = 0; index <= array.length; index++) {
-//   for (let i = 0; i <= array.length; i++) {
-//     if (array[i] === array[index]) {
-//       console.log(array);
-//     }
-//   }
-// }
-// for (const index of array) {
-//   for (const innerIndex of array) {
-//     if (innerIndex === index) {
-//       array.splice(innerIndex, 1);
-//     }
-//   }
-// }
-// console.log(array);
-console.log(array);
-
-for (let i = 0; i < array.length; i++) {
-  let elementoAtual = array[i];
-  for (let j = i + 1; j < array.length; j++) {
-    if (elementoAtual === array[j]) {
-      array.splice(j, 1);
-      j--;
+map.on("singleclick", (event) => {
+  document.querySelector(".ol-selectable").style.display = "flex";
+  popupDiv.style.removeProperty("position");
+  popupDiv.innerHTML = "Texto de teste"; // Adicione um texto de teste no início
+  console.log(popupDiv); // Verifique se o popupDiv está sendo selecionado corretamente
+  const featuresObj = map.getFeaturesAtPixel(event.pixel)[0];
+  if (featuresObj !== undefined) {
+    if (featuresObj.id_ === "lineStringID" || featuresObj.id_ === "icone") {
+      overlaysMap.forEach((item) => {
+        if (item.id === "overlay1") {
+          cleanDuplicateDiv("ol-selectable");
+          cleanDuplicateTextContent(".ol-selectable");
+          popupDiv.innerHTML = featuresObj.id_;
+          item.setPosition(event.coordinate);
+        }
+      });
+    } else {
+      document.querySelector(".ol-selectable").style.display = "none";
+      popupDiv.innerHTML = "Nenhum recurso encontrado aqui.";
     }
+  } else {
+    popupDiv.innerHTML = "Nenhum clique em um recurso.";
   }
-}
-console.log(array);
+});

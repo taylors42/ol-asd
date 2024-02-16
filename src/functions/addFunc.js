@@ -31,6 +31,7 @@ export function addIcon(map, arr) {
     map.addLayer(vectorLayer);
   }
 }
+
 export function addLine(map, arr) {
   const style = new Style({
     stroke: new Stroke({
@@ -38,15 +39,18 @@ export function addLine(map, arr) {
       width: 3,
     }),
   });
+
   const lineFeature = new Feature({
     geometry: new LineString(arr),
   });
+
   const lineVectorLayer = new VectorLayer({
     source: new VectorSource({
       features: [lineFeature],
     }),
   });
-  lineFeature.setId("lineStringID");
+
+  lineFeature.setId("line");
   lineFeature.setStyle(style);
   map.addLayer(lineVectorLayer);
 }

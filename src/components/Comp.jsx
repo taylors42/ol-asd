@@ -23,14 +23,14 @@ import { getLocationOfPoint } from "../functions/getFunc";
 export default function Comp() {
   useGeographic();
   const { view, map, createMap } = useContext(MapContext);
-  const popupDiv = document.querySelector(".ol-selectable");
+  const overlayDiv = document.querySelector(".ol-selectable");
   const overlays = [];
+  const line = [[0, 0]];
   const layers = [
     new TileLayer({
       source: new OSM(),
     }),
   ];
-  const line = [[0, 0]];
 
   useEffect(() => {
     const container = document.getElementById("popup");
@@ -53,28 +53,27 @@ export default function Comp() {
     addIcon(map, line);
     const overlaysMap = map.getOverlays().getArray();
     map.on("singleclick", (event) => {
-      document.querySelector(".ol-selectable").style.display = "flex";
+      console.log(event);
       cleanDuplicateTextContent(".ol-selectable");
-
-      popupDiv.style.removeProperty("position");
+      overlayDiv.style.removeProperty("position");
       const featuresObj = map.getFeaturesAtPixel(event.pixel)[0];
-      console.log(featuresObj);
       if (featuresObj !== undefined) {
-        const teste1 = featuresObj.geometryChangeKey_;
-        if (featuresObj.id_ === "lineStringID" || featuresObj.id_ === "icone") {
+        document.querySelector(".ol-selectable").style.display = "flex";
+        const featureLocate = featuresObj.geometryChangeKey_;
+        if (featuresObj.id_ === "line" || featuresObj.id_ === "icone") {
           overlaysMap.forEach((item) => {
             if (item.id === "overlay1") {
-              if (popupDiv.innerHTML == "") {
-                popupDiv.textContent = "teste";
-                console.log(popupDiv.textContent);
+              if (document.querySelector(".ol-selectable").textContent === "") {
+                document.querySelector(".ol-selectable").textContent =
+                  featuresObj.id_;
+                console.log(featuresObj);
               }
-              item.setPosition(teste1.target.flatCoordinates);
+              item.setPosition(featureLocate.target.flatCoordinates);
             }
           });
         }
       } else {
         document.querySelector(".ol-selectable").style.display = "none";
-        popupDiv.textContent = "Nenhum recurso encontrado aqui.";
       }
     });
   }

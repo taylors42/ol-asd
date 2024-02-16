@@ -11,8 +11,8 @@
 .ol-mouse-position {
   opacity: 0%;
 }
-.overlay3 {
-  width: 30px;
+#overlay3 {
+  width: 5rem;
   height: 30px;
   background: black;
   display: flex;
