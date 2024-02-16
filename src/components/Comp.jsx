@@ -48,10 +48,8 @@ export default function Comp() {
   if (map !== null) {
     cleanPoints(map);
     cleanDuplicatesOnArray(line);
-    routeGenerator(line, 2);
-    addLine(map, line);
+    routeGenerator(map, line, 4, "y");
     addIcon(map, line);
-    const overlaysMap = map.getOverlays().getArray();
     map.on("singleclick", (event) => {
       console.log(event);
       cleanDuplicateTextContent(".ol-selectable");
@@ -61,16 +59,21 @@ export default function Comp() {
         document.querySelector(".ol-selectable").style.display = "flex";
         const featureLocate = featuresObj.geometryChangeKey_;
         if (featuresObj.id_ === "line" || featuresObj.id_ === "icone") {
-          overlaysMap.forEach((item) => {
-            if (item.id === "overlay1") {
-              if (document.querySelector(".ol-selectable").textContent === "") {
-                document.querySelector(".ol-selectable").textContent =
-                  featuresObj.id_;
-                console.log(featuresObj);
+          map
+            .getOverlays()
+            .getArray()
+            .forEach((item) => {
+              if (item.id === "overlay1") {
+                if (
+                  document.querySelector(".ol-selectable").textContent === ""
+                ) {
+                  document.querySelector(".ol-selectable").textContent =
+                    featuresObj.id_;
+                  console.log(featuresObj);
+                }
+                item.setPosition(featureLocate.target.flatCoordinates);
               }
-              item.setPosition(featureLocate.target.flatCoordinates);
-            }
-          });
+            });
         }
       } else {
         document.querySelector(".ol-selectable").style.display = "none";
