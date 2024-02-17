@@ -32,8 +32,13 @@ export default function Comp() {
   const line: number[][] = [[0, 0]];
 
   useEffect(() => {
-    document.querySelector(".ol-viewport")?.remove();
-    TheMap()
+    if (
+      document.querySelector(".ol-viewport") !== null &&
+      document.querySelector(".ol-viewport") !== undefined
+    ) {
+      document.querySelector(".ol-viewport").remove();
+    }
+    createMap(TheMap());
   }, []);
 
   if (map !== null) {
@@ -48,7 +53,7 @@ export default function Comp() {
         .getOverlays()
         .getArray()
         .find((obj: any) => obj.id === "overlay1");
-      if (featuresObj !== undefined && featuresObj !==) {
+      if (featuresObj !== undefined) {
         const featureLocate = featuresObj.geometryChangeKey_;
         if (featuresObj.id_ === "icone") {
           overlay1.setPosition(featureLocate.target.flatCoordinates);

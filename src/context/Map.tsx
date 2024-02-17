@@ -9,11 +9,9 @@ export default function TheMap() {
   return new Map({
     target: "map",
     layers: [
-      
       new TileLayer({
-        source: new OSM()
-        
-      })
+        source: new OSM(),
+      }),
     ],
     view: new View({
       center: [-110, 45],
