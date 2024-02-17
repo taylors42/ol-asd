@@ -5,8 +5,10 @@ import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style.js";
 import Point from "ol/geom/Point.js";
 import { Feature } from "ol";
 import { Overlay } from "ol";
+import { Map } from "ol";
+import { Coordinate } from "ol/coordinate";
 
-export function addIcon(map, arr) {
+export function addIcon(map: Map, arr: Array<Coordinate>) {
   if (map) {
     const iconStyle = new Style({
       image: new Icon({
@@ -16,7 +18,6 @@ export function addIcon(map, arr) {
         src: "https://openlayers.org/en/latest/examples/data/icon.png",
       }),
     });
-
     const iconFeature = new Feature({
       geometry: new Point(arr[arr.length - 1]),
     });
@@ -33,7 +34,7 @@ export function addIcon(map, arr) {
   }
 }
 
-export function addLine(map, arr) {
+export function addLine(map: Map, arr: number[][]) {
   const style = new Style({
     stroke: new Stroke({
       color: "#41ff33",
@@ -56,7 +57,7 @@ export function addLine(map, arr) {
   map.addLayer(lineVectorLayer);
 }
 
-export function addPoint(map, coordinates) {
+export function addPoint(map: Map, coordinates: Array<number>) {
   map.addLayer(
     new VectorLayer({
       source: new VectorSource({
@@ -66,11 +67,11 @@ export function addPoint(map, coordinates) {
   );
 }
 
-export function createOverlay(map, id, element) {
+export function createOverlay(map: Map, id: string, className: string) {
   const overlay = new Overlay({
     id: id,
-    className: element,
-    position: [0,0]
-  })
-  map.addOverlay(overlay)
+    className: className,
+    position: [0, 0],
+  });
+  map.addOverlay(overlay);
 }
