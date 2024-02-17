@@ -2,13 +2,13 @@ import { addLine } from "./addFunc";
 import { Map } from "ol";
 
 export function routeGenerator(
-  map: Map,
-  routeArray: number[][],
-  numberOfGenerations: number,
-  conditional: string
+  map,
+  routeArray,
+  numberOfGenerations,
+  conditional
 ) {
-  let lat: number = Math.random() * 180 - 90;
-  let long: number = Math.random() * 360 - 180;
+  let lat = Math.random() * 180 - 90;
+  let long = Math.random() * 360 - 180;
 
   for (let i = 1; i < numberOfGenerations; i++) {
     lat += (Math.random() - 0.3) * 20;

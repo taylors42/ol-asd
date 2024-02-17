@@ -8,7 +8,7 @@ import { Overlay } from "ol";
 import { Map } from "ol";
 import { Coordinate } from "ol/coordinate";
 
-export function addIcon(map: Map, arr: Array<Coordinate>) {
+export function addIcon(map, arr) {
   if (map) {
     const iconStyle = new Style({
       image: new Icon({
@@ -34,7 +34,7 @@ export function addIcon(map: Map, arr: Array<Coordinate>) {
   }
 }
 
-export function addLine(map: Map, arr: number[][]) {
+export function addLine(map, arr) {
   const style = new Style({
     stroke: new Stroke({
       color: "#41ff33",
@@ -57,7 +57,7 @@ export function addLine(map: Map, arr: number[][]) {
   map.addLayer(lineVectorLayer);
 }
 
-export function addPoint(map: Map, coordinates: Array<number>) {
+export function addPoint(map, coordinates) {
   map.addLayer(
     new VectorLayer({
       source: new VectorSource({
@@ -67,7 +67,7 @@ export function addPoint(map: Map, coordinates: Array<number>) {
   );
 }
 
-export function createOverlay(map: Map, id: string, className: string) {
+export function createOverlay(map, id, className) {
   const overlay = new Overlay({
     id: id,
     className: className,
