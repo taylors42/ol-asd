@@ -4,6 +4,7 @@ import TheMap from "../context/Map";
 import "../App.css";
 import "../overlays.css";
 import { useGeographic } from "ol/proj";
+import { changePosition } from "../functions/changePosition";
 import {
   createIcon,
   createLine,
@@ -31,33 +32,31 @@ export default function Comp() {
     }),
   ];
   line.push(
-    [-23.55052, -46.633308], // São Paulo, Brasil
-    [-22.906847, -43.172896], // Rio de Janeiro, Brasil
-    [-15.794229, -47.882166], // Brasília, Brasil
-    [-3.731902, -38.526739], // Fortaleza, Brasil
-    [-9.649849, -35.708949] // Maceió, Brasil
+    [-23.55052, -46.633308],
+    [-22.906847, -43.172896],
+    [-15.794229, -47.882166],
+    [-3.731902, -38.526739],
+    [-9.649849, -35.708949]
   );
   useEffect(() => {
     document.querySelector(".ol-viewport")?.remove();
     createMap(TheMap(layers));
   }, []);
-  const point = createPoint(map, "taylor123", [-114, -46.6130027]);
-  createLine(map, line);
+  const pointId = createPoint(map, "taylor123", [-114, -46.6130027]);
+  const iconId = createLine(map, line);
+  const overlays = [];
   map?.on("singleclick", (event) => {
     const overlay1 = createOverlay(map, "overlayID1");
     const overlay2 = createOverlay(map, "overlayID2");
-    const featuresObj = map?.getFeaturesAtPixel(event.pixel)[0].getId();
-    console.log(featuresObj);
-    const featureLoc = featuresObj?.geometryChangeKey_;
-    cleanDuplicateTextContent(featuresObj);
-    const teste =
-      featuresObj == "icon"
-        ? overlay1?.setPosition(featureLoc?.target.flatCoordinates)
-        : overlay1?.setPosition(undefined);
-    const test1 =
-      featuresObj == "line"
-        ? overlay2?.setPosition(featureLoc?.target.flatCoordinates)
-        : overlay2?.setPosition(undefined);
+    overlays.push(overlay1, overlay2);
+    const featuresId = map?.getFeaturesAtPixel(event.pixel)[0]?.getId();
+    const featureLocation = map?.getFeaturesAtPixel(event.pixel)[0]
+      ?.geometryChangeKey_?.target?.flatCoordinates;
+    if (featuresId === iconId)
+      changePosition(overlays, overlay1, featureLocation);
+    else if (featuresId === pointId)
+      changePosition(overlays, overlay2, featureLocation);
+    else overlays.forEach((overlay) => overlay?.setPosition(undefined));
   });
   return <div id="map"></div>;
 }

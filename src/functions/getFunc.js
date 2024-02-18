@@ -11,7 +11,7 @@ export function getLocationOfPoint(map, array) {
     if (layer instanceof VectorLayer) {
       const features = layer.getSource().getFeatures();
       features.forEach((feature) => {
-        if (feature.getGeometry() instanceof Point) {
+        if (feature?.getGeometry() instanceof Point) {
           const coordenadas = feature.getGeometry().getCoordinates();
           array.push(coordenadas);
         }

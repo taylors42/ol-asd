@@ -29,6 +29,7 @@ export function createIcon(map, arr) {
     }),
   });
   map?.addLayer(vectorLayer);
+  return iconFeature?.getId();
 }
 
 export function createLine(map, arr) {
@@ -52,13 +53,14 @@ export function createLine(map, arr) {
   lineFeature.setId("line");
   lineFeature.setStyle(style);
   map?.addLayer(lineVectorLayer);
-  createIcon(map, arr);
+  const iconId = createIcon(map, arr);
+  return iconId;
 }
 export function createPoint(map, id, coordinates) {
   let point = new Feature({
     geometry: new Point(coordinates),
   });
-  point.setId(id);
+  point?.setId(id);
   map?.addLayer(
     new VectorLayer({
       source: new VectorSource({
@@ -66,6 +68,7 @@ export function createPoint(map, id, coordinates) {
       }),
     })
   );
+  return point?.getId();
 }
 
 export function createOverlay(map, id) {
@@ -77,7 +80,7 @@ export function createOverlay(map, id) {
     })
   );
   return map
-    .getOverlays()
+    ?.getOverlays()
     .getArray()
     .find((obj) => obj.id === id);
 }
