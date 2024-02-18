@@ -19,3 +19,10 @@ export function getLocationOfPoint(map, array) {
     }
   });
 }
+
+export function getOverlayById(map, id) {
+  return map
+    ?.getOverlays()
+    .getArray()
+    .find((obj) => obj.id === id);
+}

@@ -21,7 +21,7 @@ export function cleanPoints(map) {
 
 export function cleanDuplicateDiv(div) {
   const innerDiv = document.querySelectorAll(div);
-  if (innerDiv && innerDiv.length > 1) {
+  if (innerDiv && innerDiv.length >= 1) {
     innerDiv[0].remove();
   }
 }

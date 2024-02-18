@@ -1,4 +1,4 @@
-import { addLine } from "./addFunc";
+import { createLine } from "./createFunc";
 export function routeGenerator(
   map,
   routeArray,
@@ -14,6 +14,6 @@ export function routeGenerator(
     routeArray.push([lat, long]);
   }
   if (conditional === "y") {
-    addLine(map, routeArray);
+    createLine(map, routeArray);
   }
 }
