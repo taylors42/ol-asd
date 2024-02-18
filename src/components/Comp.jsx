@@ -41,21 +41,21 @@ export default function Comp() {
     document.querySelector(".ol-viewport")?.remove();
     createMap(TheMap(layers));
   }, []);
-  createPoint(map, [-114, -46.6130027]);
+  const point = createPoint(map, "taylor123", [-114, -46.6130027]);
   createLine(map, line);
   map?.on("singleclick", (event) => {
     const overlay1 = createOverlay(map, "overlayID1");
     const overlay2 = createOverlay(map, "overlayID2");
-    const featuresObj = map?.getFeaturesAtPixel(event.pixel)[0];
+    const featuresObj = map?.getFeaturesAtPixel(event.pixel)[0].getId();
     console.log(featuresObj);
     const featureLoc = featuresObj?.geometryChangeKey_;
-    cleanDuplicateTextContent(featuresObj?.id_);
+    cleanDuplicateTextContent(featuresObj);
     const teste =
-      featuresObj?.id_ == "icon"
+      featuresObj == "icon"
         ? overlay1?.setPosition(featureLoc?.target.flatCoordinates)
         : overlay1?.setPosition(undefined);
     const test1 =
-      featuresObj?.id_ == "line"
+      featuresObj == "line"
         ? overlay2?.setPosition(featureLoc?.target.flatCoordinates)
         : overlay2?.setPosition(undefined);
   });

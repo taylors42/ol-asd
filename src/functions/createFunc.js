@@ -54,14 +54,16 @@ export function createLine(map, arr) {
   map?.addLayer(lineVectorLayer);
   createIcon(map, arr);
 }
-
-export function createPoint(map, coordinates) {
+export function createPoint(map, id, coordinates) {
+  let point = new Feature({
+    geometry: new Point(coordinates),
+  });
+  point.setId(id);
   map?.addLayer(
     new VectorLayer({
       source: new VectorSource({
-        features: [new Feature(new Point(coordinates))],
+        features: [point],
       }),
-      id: "tayid123",
     })
   );
 }
