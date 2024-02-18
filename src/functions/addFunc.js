@@ -7,7 +7,6 @@ import { Feature } from "ol";
 import { Overlay } from "ol";
 
 export function addIcon(map, arr) {
-  if (map) {
     const iconStyle = new Style({
       image: new Icon({
         anchor: [0.5, 46],
@@ -29,8 +28,7 @@ export function addIcon(map, arr) {
         features: [iconFeature],
       }),
     });
-    map.addLayer(vectorLayer);
-  }
+    map?.addLayer(vectorLayer);
 }
 
 export function addLine(map, arr) {
@@ -53,11 +51,11 @@ export function addLine(map, arr) {
 
   lineFeature.setId("line");
   lineFeature.setStyle(style);
-  map.addLayer(lineVectorLayer);
+  map?.addLayer(lineVectorLayer);
 }
 
 export function addPoint(map, coordinates) {
-  map.addLayer(
+  map?.addLayer(
     new VectorLayer({
       source: new VectorSource({
         features: [new Feature(new Point(coordinates))],
@@ -66,15 +64,10 @@ export function addPoint(map, coordinates) {
   );
 }
 
-<<<<<<<< HEAD:src/functions/addFunc.jsx
 export function createOverlay(map, id, className) {
-========
-export function createOverlay(map, id, element) {
->>>>>>>> parent of 8271ace (.):src/functions/addFunc.js
-  const overlay = new Overlay({
+  map?.addOverlay(new Overlay({
     id: id,
-    className: element,
-    position: [0,0]
-  })
-  map.addOverlay(overlay)
+    className: className,
+    position: [0,0],
+  }))
 }

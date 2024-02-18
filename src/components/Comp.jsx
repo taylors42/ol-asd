@@ -1,99 +1,32 @@
-<<<<<<< HEAD
 import { useContext, useEffect, useState } from "react";
-import { MapContextProvider } from "../context/MapContext";
-=======
-import { useContext, useEffect, useState, useRef } from "react";
 import { MapContext } from "../context/MapContext";
->>>>>>> parent of 8271ace (.)
 import TheMap from "../context/Map";
 import "../App.css";
-import { Feature } from "ol";
-import { Vector as VectorSource } from "ol/source";
-import { OSM } from "ol/source";
-import Point from "ol/geom/Point.js";
-import { Overlay } from "ol";
-import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style.js";
-import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { useGeographic } from "ol/proj";
-<<<<<<< HEAD
-import { addLine, addIcon } from "../functions/addFunc";
-=======
 import { addLine, addIcon, createOverlay } from "../functions/addFunc";
->>>>>>> parent of 8271ace (.)
 import {
   cleanPoints,
   cleanDuplicateDiv,
   cleanDuplicateTextContent,
   cleanDuplicatesOnArray,
 } from "../functions/cleanFunc";
+import { OSM } from "ol/source";
+import TileLayer from "ol/layer/Tile";
 import { routeGenerator } from "../functions/generateFunc";
 import { getLocationOfPoint } from "../functions/getFunc";
-<<<<<<< HEAD
-import { Map } from "ol";
-import BaseLayer from "ol/layer/Base";
-import BaseTileLayer from "ol/layer/BaseTile";
-import TileSource from "ol/source/Tile";
-import React from "react";
-
 export default function Comp() {
-  useGeographic();
-  const { map, createMap } = useContext(MapContextProvider);
-  const overlays = [];
+  const { map, createMap } = useContext(MapContext);
   const line = [[0, 0]];
-
+  const layers = [new TileLayer({
+    source: new OSM(),
+  })]
   useEffect(() => {
-    document.querySelector(".ol-viewport")?.remove();
-    TheMap();
-  }, []);
-
-  if (map !== null) {
-    cleanPoints(map);
-    cleanDuplicatesOnArray(line);
-    routeGenerator(map, line, 4, "y");
-    addIcon(map, line);
-    map.on("singleclick", (event) => {
-      cleanDuplicateTextContent(".ol-selectable");
-      const featuresObj = map.getFeaturesAtPixel(event.pixel)[0];
-      const overlay1 = map
-        .getOverlays()
-        .getArray()
-        .find((obj) => obj.id === "overlay1");
-      if (featuresObj !== undefined && featuresObj !== null) {
-        const featureLocate = featuresObj.geometryChangeKey_;
-        if (featuresObj.id_ === "icone") {
-          overlay1.setPosition(featureLocate.target.flatCoordinates);
-        }
-      } else {
-        overlay1.setPosition(undefined);
-      }
-    });
-  }
-  return <div id="map"></div>;
-=======
-
-export default function Comp() {
-  useGeographic();
-  const { view, map, createMap } = useContext(MapContext);
-  const overlayDiv = document.querySelector(".ol-selectable");
-  const overlay1Ref = useRef()
-
-  const line = [[0, 0]];
-  const layers = [
-    new TileLayer({
-      source: new OSM(),
-    }),
-  ];
-
-  useEffect(() => {
-    if (document.querySelector(".ol-viewport")) {
-      document.querySelector(".ol-viewport").remove();
-    }
-    createMap(TheMap(layers, view));
-  }, []);
-  if(map){
+      document.querySelector(".ol-viewport")?.remove(); 
+      createMap(TheMap(layers));
+    }, []);
 
     createOverlay(map, "overlay1", "teste420")
-  }
+
   // if (map !== null) {
   //   cleanPoints(map);
   //   cleanDuplicatesOnArray(line);
@@ -122,10 +55,5 @@ export default function Comp() {
   //     }
   //   });
   // }
-  return (
-  <div id="map">
-    <div id="overlay2"></div>
-  </div>
-  )
->>>>>>> parent of 8271ace (.)
+  return <div id="map"></div>
 }

@@ -4,9 +4,10 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from "ol/style.js";
 import { Feature } from "ol";
+import { Map } from "ol";
 
 export function cleanPoints(map) {
-  map.getLayers().forEach((layer) => {
+  map?.getLayers().forEach((layer) => {
     if (layer instanceof VectorLayer) {
       const features = layer.getSource().getFeatures();
       features.forEach((feature) => {
@@ -25,13 +26,17 @@ export function cleanDuplicateDiv(div) {
   }
 }
 
-export function cleanDuplicateTextContent(div) {
-  const innerDiv = document.querySelector(div);
-  if (innerDiv && innerDiv.childNodes.length >= 1) {
-    while (innerDiv.childNodes.length >= 1) {
-      innerDiv.removeChild(innerDiv.firstChild);
+export function cleanDuplicateTextContent(divSelector) {
+  const innerDiv = document.querySelector(divSelector);
+
+  if (innerDiv !== null && innerDiv.childNodes.length >= 1) {
+    while (innerDiv.firstChild !== null) {
+      const firstChild = innerDiv.firstChild;
+      if (firstChild !== null) {
+        innerDiv.removeChild(firstChild);
+      }
     }
-    cleanDuplicateDiv(div);
+    cleanDuplicateDiv(divSelector);
   }
 }
 
