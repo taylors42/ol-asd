@@ -5,16 +5,7 @@ import "../App.css";
 import "../overlays.css";
 import { Feature } from "ol";
 import { useGeographic } from "ol/proj";
-import Cluster from "ol/source/Cluster";
 import Map from "ol/Map";
-import {
-  Circle as CircleStyle,
-  Fill,
-  Icon,
-  Stroke,
-  Style,
-  Text,
-} from 'ol/style.js';
 import { changePosition } from "../functions/changePosition";
 import {
   createIcon,
@@ -55,77 +46,50 @@ export default function Comp1() {
     [-8.052, -34.928], // Recife, PE
     [-5.779, -35.2] // Natal, RN
   );
-
   useEffect(() => {
-      document.querySelector(".ol-viewport")?.remove();
     createMap(TheMap(layers));
   }, []);
-
-const pontos = [
-  new Feature({
-    geometry: new Point([0, 0]),
-    nome: "Ponto 1",
-    data: "01/01/2024",
-  }),
-  
-  new Feature({
-    geometry: new Point([10, 10]),
-    nome: "Ponto 2",
-    data: "02/02/2024",
-  }),
-
-  new Feature({
-    geometry: new Point([20, 20]),
-    nome: "ponto 3",
-    data: "10/10/2020",
-  }),
-  new Feature({
-    geometry: new Point([23, 23]),
-    nome: "ponto 3",
-    data: "10/10/2020",
-  }),
-  new Feature({
-    geometry: new Point([27, 27]),
-    nome: "ponto 3",
-    data: "10/10/2020",
-  }),
-];
-
-const source = new VectorSource({
-  features: pontos,
-});
-
-const clusterSource = new Cluster({
-  distance: 70,
-  source: source,
-});
-
-const clusterLayer = new VectorLayer({
-  source: clusterSource,
-  renderBuffer: true,
-  style: function(feature) {
-    const size = feature.get('features').length > 1 ? feature.get('features').length : " "
-    return new Style({
-      image: new CircleStyle({
-        radius: 10,
-        stroke: new Stroke({
-          color: '#fff',
-        }),
-        fill: new Fill({
-          color: '#3399CC',
-        }),
-      }),
-      text: new Text({
-        text: size.toString(),
-        fill: new Fill({
-          color: '#fff',
-        }),
-      }),
+  const infoOverlay = new Overlay({
+    element: document.createElement("div"),
+    className: "overlayID1",
+  });
+  map?.addOverlay(infoOverlay);
+  const pontos = [
+    new Feature({
+      geometry: new Point([0, 0]),
+      nome: "Ponto 1",
+      data: "01/01/2024",
+    }),
+    new Feature({
+      geometry: new Point([10, 10]),
+      nome: "Ponto 2",
+      data: "02/02/2024",
+    }),
+    new Feature({
+      geometry: new Point([20, 20]),
+      nome: "ponto 3",
+      data: "10/10/2020",
+    }),
+  ];
+  const vectorSource = new VectorSource({
+    features: pontos,
+  });
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+  });
+  console.log(map instanceof Map);
+  map?.addLayer(vectorLayer);
+  map?.on("click", function (event) {
+    console.log("click");
+    if (map?.getFeaturesAtPixel(event.pixel)[0] == undefined)
+      cleanAllOverlaysOnMap(map);
+    map?.forEachFeatureAtPixel(event.pixel, function (feature) {
+      const nome = feature.get("nome");
+      const data = feature.get("data");
+      infoOverlay.getElement().innerHTML = `Nome: ${nome}<br>Data: ${data}<br>`;
+      infoOverlay.setPosition(event.coordinate);
     });
-  },
-});
+  });
 
-map?.addLayer(clusterLayer);
-map?.on("singleclick", () => {console.log("err")})
   return <div id="map"></div>;
 }
