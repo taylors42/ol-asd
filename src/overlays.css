@@ -4,8 +4,8 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8.2px);
   -webkit-backdrop-filter: blur(8.2px);
-  width: 5rem;
-  height: 5rem;
+  width: 8rem;
+  height: 8rem;
 }
 .overlayID2 {
   background: rgba(255, 0, 0, 0.322);

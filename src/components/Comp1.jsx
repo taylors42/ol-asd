@@ -5,6 +5,7 @@ import "../App.css";
 import "../overlays.css";
 import { Feature } from "ol";
 import { useGeographic } from "ol/proj";
+import Map from "ol/Map";
 import { changePosition } from "../functions/changePosition";
 import {
   createIcon,
@@ -18,6 +19,7 @@ import {
   cleanDuplicateTextContent,
   cleanDuplicatesOnArray,
 } from "../functions/cleanScripts";
+import { cleanAllOverlaysOnMap } from "../functions/changePosition";
 import { OSM } from "ol/source";
 import TileLayer from "ol/layer/Tile";
 import { routeGenerator } from "../functions/generateScripts";
@@ -26,7 +28,7 @@ import { Point } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import Overlay from "ol/Overlay";
-export default function Comp() {
+export default function Comp1() {
   useGeographic();
   const { map, createMap } = useContext(MapContext);
   const line = [[0, 0]];
@@ -45,19 +47,49 @@ export default function Comp() {
     [-5.779, -35.2] // Natal, RN
   );
   useEffect(() => {
-    document.querySelector(".ol-viewport")?.remove();
     createMap(TheMap(layers));
   }, []);
-  const overlays = [];
-  const points = [];
-  const ponto1 = createPoint(map, "overlayID1", [0, 0], "ponto1");
-  const ponto2 = createPoint(map, "overlayID2", [10, 10], "ponto2");
-  points.push(ponto1, ponto2);
-  map?.on("singleclick", (event) => {
-    const coord = map?.getFeaturesAtPixel(event.pixel)[0]?.geometryChangeKey_
-      ?.target?.flatCoordinates;
-    const featuresId = map?.getFeaturesAtPixel(event.pixel)[0]?.getId();
-    changePosition(map, points, featuresId, coord);
+  const infoOverlay = new Overlay({
+    element: document.createElement("div"),
+    className: "overlayID1",
   });
+  map?.addOverlay(infoOverlay);
+  const pontos = [
+    new Feature({
+      geometry: new Point([0, 0]),
+      nome: "Ponto 1",
+      data: "01/01/2024",
+    }),
+    new Feature({
+      geometry: new Point([10, 10]),
+      nome: "Ponto 2",
+      data: "02/02/2024",
+    }),
+    new Feature({
+      geometry: new Point([20, 20]),
+      nome: "ponto 3",
+      data: "10/10/2020",
+    }),
+  ];
+  const vectorSource = new VectorSource({
+    features: pontos,
+  });
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+  });
+  console.log(map instanceof Map);
+  map?.addLayer(vectorLayer);
+  map?.on("click", function (event) {
+    console.log("click");
+    if (map?.getFeaturesAtPixel(event.pixel)[0] == undefined)
+      cleanAllOverlaysOnMap(map);
+    map?.forEachFeatureAtPixel(event.pixel, function (feature) {
+      const nome = feature.get("nome");
+      const data = feature.get("data");
+      infoOverlay.getElement().innerHTML = `Nome: ${nome}<br>Data: ${data}<br>`;
+      infoOverlay.setPosition(event.coordinate);
+    });
+  });
+
   return <div id="map"></div>;
 }

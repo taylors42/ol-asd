@@ -1,0 +1,34 @@
+const infoOverlay = new Overlay({
+  element: document.createElement('div'),
+});
+map.addOverlay(infoOverlay);
+const pontos = [
+  new Feature({
+    geometry: new Point([0, 0]),
+    nome: 'Ponto 1',
+    data: '01/01/2024',
+    // imagem: 'url_da_imagem_1',
+  }),
+  new Feature({
+    geometry: new Point([10, 10]),
+    nome: 'Ponto 2',
+    data: '02/02/2024',
+    // imagem: 'url_da_imagem_2',
+  }),
+];
+const vectorSource = new VectorSource({
+  features: pontos,
+});
+const vectorLayer = new VectorLayer({
+  source: vectorSource,
+});
+map.addLayer(vectorLayer);
+map.on('click', function(event) {
+  map.forEachFeatureAtPixel(event.pixel, function(feature) {
+    const nome = feature.get('nome');
+    const data = feature.get('data');
+    // const imagem = feature.get('imagem');
+    infoOverlay.getElement().innerHTML = `Nome: ${nome}<br>Data: ${data}<br>`;
+    infoOverlay.setPosition(event.coordinate);
+  });
+});

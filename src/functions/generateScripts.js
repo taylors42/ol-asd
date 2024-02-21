@@ -1,4 +1,4 @@
-import { createLine } from "./createFunc";
+import { createLine } from "./createScripts";
 export function routeGenerator(
   map,
   routeArray,

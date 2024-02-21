@@ -12,8 +12,8 @@ export function getLocationOfPoint(map, array) {
       const features = layer.getSource().getFeatures();
       features.forEach((feature) => {
         if (feature?.getGeometry() instanceof Point) {
-          const coordenadas = feature.getGeometry().getCoordinates();
-          array.push(coordenadas);
+          const coordenadas = feature?.getGeometry().getCoordinates();
+          array?.push(coordenadas);
         }
       });
     }
