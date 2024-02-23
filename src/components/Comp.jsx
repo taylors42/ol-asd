@@ -35,6 +35,7 @@ export default function Comp() {
       source: new OSM(),
     }),
   ];
+  
   line.push(
     [-30.034, -51.217], // Porto Alegre, RS
     [-27.593, -48.558], // Florianópolis, SC
