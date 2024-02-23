@@ -5,7 +5,10 @@ import { MapContextProvider } from "./context/MapContext";
 function App() {
   return (
     <MapContextProvider>
-      <Comp1 />
+      <div className="container">
+        <Comp1 />
+        <div className="main"></div>
+      </div>
     </MapContextProvider>
   );
 }

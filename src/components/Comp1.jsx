@@ -147,11 +147,20 @@ export default function Comp1() {
     [-7.2306, -35.8811]
   );
 
-  const pontos = line.map((point) => {
-    return new Feature({
-      geometry: new Point(point.reverse()),
-    });
-  });
+  const pontos = [
+    new Feature({
+      geometry: new Point([-34.877, -8.0466 ]),
+      nome: "Conecta",
+      data: "00/00/0000",
+      model: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fofertas.vw.com.br%2Fmodelos%2Ft-cross-11%2Fsense-200-tsi-automatico_14846%2F&psig=AOvVaw2IoiO0IN4cNzQHdTIdWKn6&ust=1708794862397000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCLDrlIj7wYQDFQAAAAAdAAAAABAI",
+    }),
+    new Feature({
+      geometry: new Point([-35.877, -8.0466 ]),
+      nome: "Conecta",
+      data: "00/00/0000",
+      model: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fofertas.vw.com.br%2Fmodelos%2Ft-cross-11%2Fsense-200-tsi-automatico_14846%2F&psig=AOvVaw2IoiO0IN4cNzQHdTIdWKn6&ust=1708794862397000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCLDrlIj7wYQDFQAAAAAdAAAAABAI",
+    })
+  ]
 
   const source = new VectorSource({
     features: pontos,
@@ -189,6 +198,7 @@ export default function Comp1() {
     },
   });
 
+
   map?.addLayer(clusterLayer);
   map?.on("click", function (event) {
     const coord = map?.getFeaturesAtPixel(event.pixel)[0]?.geometryChangeKey_
@@ -200,6 +210,11 @@ export default function Comp1() {
         if (features.length > 1) {
           console.log("Clicou em um cluster de pontos");
         } else {
+          const data = feature.get("data")
+          const nome = feature.get("nome")
+          const model = feature.get("model")
+          console.log(model)
+          infoOverlay.getElement().innerHTML = `Nome: ${nome}<br>Data: ${data}<br>Model: ${model}`;
           infoOverlay.setPosition(coord);
           console.log("Clicou em um ponto individual");
         }

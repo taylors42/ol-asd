@@ -5,15 +5,24 @@
   height: 50rem;
 }
 
-.App {
+.container{
   display: flex;
 }
+
+.main {
+  background-color: white;
+  width: 30rem;
+  height: 100%;
+}
+
 .ol-mouse-position {
   opacity: 0%;
 }
+
 ul {
   display: none;
 }
+
 #popup {
   position: absolute;
   height: 500px;
